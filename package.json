@@ -8,11 +8,11 @@
 	"repository" :
 		{ 
 		  "type" : "git",
-		  "url" : "git://github.com/drudru/ansi_up.git"
+		  "url" : "git://github.com/vmazare/ansi_up.git"
 		},
     "bugs" : 
     	{ 
-	    	"url" : "http://github.com/drudru/ansi_up/issues" 
+	    	"url" : "http://github.com/vmazare/ansi_up/issues" 
     	},
 	"engines": 
 		{ 

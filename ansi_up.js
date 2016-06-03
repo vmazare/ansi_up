@@ -107,7 +107,7 @@
 
     Ansi_Up.prototype.process = function (txt, options, markup) {
       var self = this;
-      var raw_text_chunks = txt.split(/\033\[/);
+      var raw_text_chunks = txt.split(/\e\[/);
       var first_chunk = raw_text_chunks.shift(); // the first chunk is not the result of the split
 
       var color_chunks = raw_text_chunks.map(function (chunk) {

@@ -238,9 +238,18 @@
       if ((self.fg === null) && (self.bg === null)) {
         return orig_txt;
       } else {
-        var styles = [];
+        var styles = {};
         var classes = [];
         var data = {};
+        // @TODO: merge get_span and render_data
+        var get_span = function(initProps, data, createSpan, childText) {
+          var dataAttrs = render_data.call(self, data)
+          for(var attrName in dataAttrs){
+            var attrVal = dataAttrs[attrName]
+            initProps[attrName] = attrVal
+          }
+          return createSpan(initProps, childText)
+        }
         var render_data = function (data) {
           var fragments = [];
           var key;

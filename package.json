@@ -27,8 +27,5 @@
     "should": "*",
     "jshint": "*",
     "jslint": "*"
-  },
-  "dependencies": {
-    "react": "^15.1.0"
   }
 }

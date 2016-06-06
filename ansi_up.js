@@ -285,9 +285,12 @@
           }
         }
         if (use_classes) {
-          return '<span class="' + classes.join(' ') + '"' + render_data.call(self, data) + '>' + orig_txt + '</span>';
+          var currentClass = classes.join(' ')
+          var span = get_span({className: currentClass}, data, createSpan, orig_txt)
+          return span
         } else {
-          return '<span style="' + styles.join(';') + '"' + render_data.call(self, data) + '>' + orig_txt + '</span>';
+          var span = get_span({style: styles}, data, createSpan, orig_txt)
+          return span
         }
       }
     };

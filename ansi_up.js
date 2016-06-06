@@ -122,8 +122,10 @@
     Ansi_Up.prototype.process_chunk = function (text, options, markup, createSpan) {
 
       // Are we using classes or styles?
-      options = typeof options == 'undefined' ? {} : options;
-      var use_classes = typeof options.use_classes != 'undefined' && options.use_classes;
+      var options = options === null ? {} : options;
+      var use_classes = options.use_classes !== null && options.use_classes;
+
+
       var key = use_classes ? 'class' : 'color';
 
       // Each 'chunk' is the text after the CSI (ESC + '[') and before the next CSI/EOF.

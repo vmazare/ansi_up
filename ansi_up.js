@@ -308,9 +308,9 @@
         return a2h.linkify(txt);
       },
 
-      ansi_to_html: function (txt, options) {
+      ansi_to_html: function (txt, options, createSpan) {
         var a2h = new Ansi_Up();
-        return a2h.ansi_to_html(txt, options);
+        return a2h.ansi_to_html(txt, options, createSpan);
       },
 
       ansi_to_text: function (txt) {

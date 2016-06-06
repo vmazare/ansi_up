@@ -96,8 +96,8 @@
       });
     };
 
-    Ansi_Up.prototype.ansi_to_html = function (txt, options) {
-      return this.process(txt, options, true);
+    Ansi_Up.prototype.ansi_to_html = function (txt, options, createSpan) {
+      return this.process(txt, options, true, createSpan);
     };
 
     Ansi_Up.prototype.ansi_to_text = function (txt) {

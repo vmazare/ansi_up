@@ -251,14 +251,15 @@
           return createSpan(initProps, childText)
         }
         var render_data = function (data) {
-          var fragments = [];
+          var fragments = {};
           var key;
           for (key in data) {
             if (data.hasOwnProperty(key)) {
-              fragments.push('data-' + key + '="' + this.escape_for_html(data[key]) + '"');
+              fragments['data-' + key] = this.escape_for_html(data[key])
             }
           }
-          return fragments.length > 0 ? ' ' + fragments.join(' ') : '';
+
+          return Object.keys(fragments).length > 0 ? fragments : ''
         };
 
         if (self.fg) {
@@ -269,7 +270,7 @@
               self.fg_truecolor = null;
             }
           } else {
-            styles.push("color:rgb(" + self.fg + ")");
+            styles.color = 'rgb(' + self.fg + ')'
           }
         }
         if (self.bg) {
@@ -280,7 +281,7 @@
               self.bg_truecolor = null;
             }
           } else {
-            styles.push("background-color:rgb(" + self.bg + ")");
+            styles['background-color'] = 'rgb(' + self.bg + ')'
           }
         }
         if (use_classes) {

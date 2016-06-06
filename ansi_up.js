@@ -105,13 +105,13 @@
       return this.process(txt, options, false);
     };
 
-    Ansi_Up.prototype.process = function (txt, options, markup) {
+    Ansi_Up.prototype.process = function (txt, options, markup, createSpan) {
       var self = this;
       var raw_text_chunks = txt.split(/\e\[/);
       var first_chunk = raw_text_chunks.shift(); // the first chunk is not the result of the split
 
       var color_chunks = raw_text_chunks.map(function (chunk) {
-        return self.process_chunk(chunk, options, markup);
+        return self.process_chunk(chunk, options, markup, createSpan);
       });
 
       color_chunks.unshift(first_chunk);
@@ -119,7 +119,7 @@
       return color_chunks.join('');
     };
 
-    Ansi_Up.prototype.process_chunk = function (text, options, markup) {
+    Ansi_Up.prototype.process_chunk = function (text, options, markup, createSpan) {
 
       // Are we using classes or styles?
       options = typeof options == 'undefined' ? {} : options;

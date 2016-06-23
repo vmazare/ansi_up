@@ -4,40 +4,88 @@
 // license : MIT
 // http://github.com/drudru/ansi_up
 
-(function (Date, undefined) {
+(function(Date, undefined) {
 
   var ansi_up,
-      VERSION = "1.3.0",
+    VERSION = "1.3.0",
 
-      // check for nodeJS
-      hasModule = (typeof module !== 'undefined'),
+    // check for nodeJS
+    hasModule = (typeof module !== 'undefined'),
 
-      // Normal and then Bright
-      ANSI_COLORS = [
-        [
-          { color: "0, 0, 0",        'class': "ansi-black"   },
-          { color: "187, 0, 0",      'class': "ansi-red"     },
-          { color: "0, 187, 0",      'class': "ansi-green"   },
-          { color: "187, 187, 0",    'class': "ansi-yellow"  },
-          { color: "0, 0, 187",      'class': "ansi-blue"    },
-          { color: "187, 0, 187",    'class': "ansi-magenta" },
-          { color: "0, 187, 187",    'class': "ansi-cyan"    },
-          { color: "255,255,255",    'class': "ansi-white"   }
-        ],
-        [
-          { color: "85, 85, 85",     'class': "ansi-bright-black"   },
-          { color: "255, 85, 85",    'class': "ansi-bright-red"     },
-          { color: "0, 255, 0",      'class': "ansi-bright-green"   },
-          { color: "255, 255, 85",   'class': "ansi-bright-yellow"  },
-          { color: "85, 85, 255",    'class': "ansi-bright-blue"    },
-          { color: "255, 85, 255",   'class': "ansi-bright-magenta" },
-          { color: "85, 255, 255",   'class': "ansi-bright-cyan"    },
-          { color: "255, 255, 255",  'class': "ansi-bright-white"   }
-        ]
+    // Normal and then Bright
+    ANSI_COLORS = [
+      [
+        {
+          color: "0, 0, 0",
+          'class': "ansi-black"
+        },
+        {
+          color: "187, 0, 0",
+          'class': "ansi-red"
+        },
+        {
+          color: "0, 187, 0",
+          'class': "ansi-green"
+        },
+        {
+          color: "187, 187, 0",
+          'class': "ansi-yellow"
+        },
+        {
+          color: "0, 0, 187",
+          'class': "ansi-blue"
+        },
+        {
+          color: "187, 0, 187",
+          'class': "ansi-magenta"
+        },
+        {
+          color: "0, 187, 187",
+          'class': "ansi-cyan"
+        },
+        {
+          color: "255,255,255",
+          'class': "ansi-white"
+        }
       ],
+      [
+        {
+          color: "85, 85, 85",
+          'class': "ansi-bright-black"
+        },
+        {
+          color: "255, 85, 85",
+          'class': "ansi-bright-red"
+        },
+        {
+          color: "0, 255, 0",
+          'class': "ansi-bright-green"
+        },
+        {
+          color: "255, 255, 85",
+          'class': "ansi-bright-yellow"
+        },
+        {
+          color: "85, 85, 255",
+          'class': "ansi-bright-blue"
+        },
+        {
+          color: "255, 85, 255",
+          'class': "ansi-bright-magenta"
+        },
+        {
+          color: "85, 255, 255",
+          'class': "ansi-bright-cyan"
+        },
+        {
+          color: "255, 255, 255",
+          'class': "ansi-bright-white"
+        }
+      ]
+    ],
 
-      // 256 Colors Palette
-      PALETTE_COLORS;
+    // 256 Colors Palette
+    PALETTE_COLORS;
 
   function Ansi_Up() {
     this.fg = this.bg = this.fg_truecolor = this.bg_truecolor = null;
@@ -48,7 +96,8 @@
     PALETTE_COLORS = [];
     // Index 0..15 : System color
     (function() {
-      var i, j;
+      var i,
+        j;
       for (i = 0; i < 2; ++i) {
         for (j = 0; j < 8; ++j) {
           PALETTE_COLORS.push(ANSI_COLORS[i][j]['color']);
@@ -60,8 +109,12 @@
     // https://gist.github.com/jasonm23/2868981#file-xterm-256color-yaml
     (function() {
       var levels = [0, 95, 135, 175, 215, 255];
-      var format = function (r, g, b) { return levels[r] + ', ' + levels[g] + ', ' + levels[b] };
-      var r, g, b;
+      var format = function(r, g, b) {
+        return levels[r] + ', ' + levels[g] + ', ' + levels[b]
+      };
+      var r,
+        g,
+        b;
       for (r = 0; r < 6; ++r) {
         for (g = 0; g < 6; ++g) {
           for (b = 0; b < 6; ++b) {
@@ -74,7 +127,9 @@
     // Index 232..255 : Grayscale
     (function() {
       var level = 8;
-      var format = function(level) { return level + ', ' + level + ', ' + level };
+      var format = function(level) {
+        return level + ', ' + level + ', ' + level
+      };
       var i;
       for (i = 0; i < 24; ++i, level += 10) {
         PALETTE_COLORS.push(format.call(this, level));
@@ -82,7 +137,7 @@
     })();
   };
 
-  Ansi_Up.prototype.escape_for_html = function (txt) {
+  Ansi_Up.prototype.escape_for_html = function(txt) {
     return txt.replace(/[&<>]/gm, function(str) {
       if (str == "&") return "&amp;";
       if (str == "<") return "&lt;";
@@ -91,22 +146,22 @@
   };
 
   // @TODO : convert to react
-  Ansi_Up.prototype.linkify = function (txt) {
+  Ansi_Up.prototype.linkify = function(txt) {
     return txt.replace(/(https?:\/\/[^\s]+)/gm, function(str) {
       return "<a href=\"" + str + "\">" + str + "</a>";
     });
   };
 
-  Ansi_Up.prototype.ansi_to_html = function (txt, options, createSpan) {
+  Ansi_Up.prototype.ansi_to_html = function(txt, options, createSpan) {
     return this.process(txt, options, true, createSpan);
   };
 
-  Ansi_Up.prototype.ansi_to_text = function (txt) {
+  Ansi_Up.prototype.ansi_to_text = function(txt) {
     var options = {};
     return this.process(txt, options, false);
   };
 
-  Ansi_Up.prototype.process = function (txt, options, markup, createSpan) {
+  Ansi_Up.prototype.process = function(txt, options, markup, createSpan) {
     var self = this;
     var raw_text_chunks = txt.split(/\e\[/);
 
@@ -115,7 +170,7 @@
 
     var chunksContainer = []
 
-    raw_text_chunks.map(function (chunk) {
+    raw_text_chunks.map(function(chunk) {
       var currentChunk = self.process_chunk(chunk, options, markup, createSpan)
       chunksContainer.push(currentChunk)
     });
@@ -126,7 +181,7 @@
     return chunksContainer
   };
 
-  Ansi_Up.prototype.process_chunk = function (text, options, markup, createSpan) {
+  Ansi_Up.prototype.process_chunk = function(text, options, markup, createSpan) {
 
     // Are we using classes or styles?
     var options = options === null ? {} : options;
@@ -207,8 +262,8 @@
                   }
                 } else {
                   var klass = (palette_index >= 16)
-                        ? ('ansi-palette-' + palette_index)
-                        : ANSI_COLORS[palette_index > 7 ? 1 : 0][palette_index % 8]['class'];
+                    ? ('ansi-palette-' + palette_index)
+                    : ANSI_COLORS[palette_index > 7 ? 1 : 0][palette_index % 8]['class'];
                   if (is_foreground) {
                     self.fg = klass;
                   } else {
@@ -216,7 +271,7 @@
                   }
                 }
               }
-            } else if(mode === '2' && nums.length >= 3) { // true color
+            } else if (mode === '2' && nums.length >= 3) { // true color
               var r = parseInt(nums.shift());
               var g = parseInt(nums.shift());
               var b = parseInt(nums.shift());
@@ -245,7 +300,9 @@
     }
 
     if ((self.fg === null) && (self.bg === null)) {
-      return orig_txt;
+      return createSpan({
+        className: 'default-terminal-color'
+      }, orig_txt);
     } else {
       var styles = {};
       var classes = [];
@@ -253,13 +310,13 @@
       // @TODO: merge get_span and render_data
       var get_span = function(initProps, data, createSpan, childText) {
         var dataAttrs = render_data.call(self, data)
-        for(var attrName in dataAttrs){
+        for (var attrName in dataAttrs) {
           var attrVal = dataAttrs[attrName]
           initProps[attrName] = attrVal
         }
         return createSpan(initProps, childText)
       }
-      var render_data = function (data) {
+      var render_data = function(data) {
         var fragments = {};
         var key;
         for (key in data) {
@@ -295,10 +352,14 @@
       }
       if (use_classes) {
         var currentClass = classes.join(' ')
-        var span = get_span({className: currentClass}, data, createSpan, orig_txt)
+        var span = get_span({
+          className: currentClass
+        }, data, createSpan, orig_txt)
         return span
       } else {
-        span = get_span({style: styles}, data, createSpan, orig_txt)
+        span = get_span({
+          style: styles
+        }, data, createSpan, orig_txt)
         return span
       }
     }
@@ -307,43 +368,43 @@
   // Module exports
   ansi_up = {
 
-    escape_for_html: function (txt) {
+    escape_for_html: function(txt) {
       var a2h = new Ansi_Up();
       return a2h.escape_for_html(txt);
     },
 
-    linkify: function (txt) {
+    linkify: function(txt) {
       var a2h = new Ansi_Up();
       return a2h.linkify(txt);
     },
 
-    ansi_to_html: function (txt, options, createSpan) {
+    ansi_to_html: function(txt, options, createSpan) {
       var a2h = new Ansi_Up();
       return a2h.ansi_to_html(txt, options, createSpan);
     },
 
-    ansi_to_text: function (txt) {
+    ansi_to_text: function(txt) {
       var a2h = new Ansi_Up();
       return a2h.ansi_to_text(txt);
     },
 
-    ansi_to_html_obj: function () {
+    ansi_to_html_obj: function() {
       return new Ansi_Up();
     }
   };
 
   // CommonJS module is defined
   if (hasModule) {
-      module.exports = ansi_up;
+    module.exports = ansi_up;
   }
   /*global ender:false */
   if (typeof window !== 'undefined' && typeof ender === 'undefined') {
-      window.ansi_up = ansi_up;
+    window.ansi_up = ansi_up;
   }
   /*global define:false */
   if (typeof define === "function" && define.amd) {
-      define("ansi_up", [], function () {
-          return ansi_up;
-      });
+    define("ansi_up", [], function() {
+      return ansi_up;
+    });
   }
 })(Date);

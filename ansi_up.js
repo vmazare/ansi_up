@@ -163,7 +163,20 @@
 
   Ansi_Up.prototype.process = function(txt, options, markup, createSpan) {
     var self = this;
-    var raw_text_chunks = txt.split(/\e\[/);
+    // var raw_text_chunks = txt.split(/\033\[/);
+    var raw_text_chunks
+
+    if (txt.split(/\033\[/).length > 1) {
+      raw_text_chunks = txt.split(/\033\[/)
+    } else if (txt.split(/\e\[/).length > 1) {
+      raw_text_chunks = txt.split(/\e\[/)
+    } else if (txt.split(/\^\[\[/).length > 1) {
+      raw_text_chunks = txt.split(/\^\[\[/)
+    } else {
+      raw_text_chunks = [txt]
+    }
+
+    // @TODO : add x1B
 
     // @TODO: review why removing first element and then insert it back.
     var first_chunk = raw_text_chunks.shift(); // the first chunk is not the result of the split
